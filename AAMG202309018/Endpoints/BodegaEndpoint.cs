@@ -5,18 +5,18 @@
         static List<object> data = new List<object>();
         public static void AddBodegaEndpoints(this WebApplication app)
         {
-            app.MapPost("/bodega", (string id, string producto) =>
+            app.MapPost("/bodega", ( string producto) =>
             {
-                data.Add(new { id, producto });
+                data.Add(new { producto });
                 return Results.Ok();
             }).AllowAnonymous();
 
-            app.MapGet("/bodega/{id}", (string id) =>
+            app.MapGet("/bodega/{id}", (int id) =>
             {
-                var item = data.FirstOrDefault(x => x.GetType().GetProperty("id")?.GetValue(x)?.ToString() == id);
-                if (item != null)
+                if (id >= 0 && id < data.Count)
                 {
-                    return Results.Ok(item);
+                    var producto = data[id];
+                    return Results.Ok(producto);
                 }
                 else
                 {
@@ -24,13 +24,11 @@
                 }
             }).AllowAnonymous();
 
-            app.MapPut("/bodega/{id}", (string id, string producto) =>
+            app.MapPut("/bodega/{id}", (int id, string producto) =>
             {
-                var item = data.FirstOrDefault(x => x.GetType().GetProperty("id")?.GetValue(x)?.ToString() == id);
-                if (item != null)
+                if (id >= 0 && id < data.Count)
                 {
-
-                    item.GetType().GetProperty("producto")?.SetValue(item, producto);
+                    data[id] = new { producto };
                     return Results.Ok();
                 }
                 else

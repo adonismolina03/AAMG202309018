@@ -8,7 +8,7 @@
             app.MapGet("/categoria", () =>
             {
                 return data;
-            }).RequireAuthorization();
+            });
 
             app.MapPost("/categoria", (string categoria) =>
             {
